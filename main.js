@@ -13,6 +13,11 @@ bgMusic.loop = true;
 bgMusic.volume = 0.5;
 
 function handleOpen() {
+  if (bgMusic.paused) {
+    bgMusic.volume = 0.5;
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(err => console.log("La musique n'a pas pu se lancer :", err));
+  }
   renderCurrentSlide();
 }
 
@@ -53,26 +58,7 @@ function startApp() {
   preloadAssets();
   renderEnvelope(app, handleOpen);
   // Add the light switch overlay on top of the envelope
-  renderLightSwitch(app, {
-    onGrab: () => {
-      // Start playing silently on touchstart/mousedown (which is 100% trusted)
-      if (bgMusic.paused) {
-        bgMusic.volume = 0; 
-        bgMusic.play().catch(e => console.log("Audio unlock failed:", e));
-      }
-    },
-    onTurnOn: () => {
-      // The audio is already playing silently. We just turn up the volume!
-      // This bypasses the strict Safari/Chrome policy because we don't call play() here.
-      bgMusic.currentTime = 0; // restart from the beginning
-      bgMusic.volume = 0.5; // Restore normal volume
-    },
-    onCancel: () => {
-      // If they didn't pull far enough, pause and reset
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
-    }
-  });
+  renderLightSwitch(app, {});
 }
 
 function preloadAssets() {
