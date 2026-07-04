@@ -3,8 +3,8 @@
 @theme {
   --color-primary: #8b5cf6; /* violet-500 */
   --color-secondary: #3b82f6; /* blue-500 */
-  --color-bg-start: #312e81; /* Indigo-900 */
-  --color-bg-end: #4c1d95; /* Violet-900 */
+  --color-bg-start: #1e3a8a; /* Deep distinct blue */
+  --color-bg-end: #6b21a8; /* Deep distinct purple */
   --font-sans: 'Poppins', sans-serif;
 }
 
