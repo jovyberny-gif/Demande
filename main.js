@@ -53,8 +53,23 @@ function startApp() {
   preloadAssets();
   renderEnvelope(app, handleOpen);
   // Add the light switch overlay on top of the envelope
-  renderLightSwitch(app, () => {
-    bgMusic.play().catch(err => console.log("La musique n'a pas pu se lancer automatiquement :", err));
+  renderLightSwitch(app, {
+    onGrab: () => {
+      // This happens exactly on mousedown/touchstart (a trusted user gesture)
+      if (bgMusic.paused) {
+        bgMusic.volume = 0; // Play silently to unlock the audio context
+        bgMusic.play().catch(e => console.log("Audio unlock failed:", e));
+      }
+    },
+    onTurnOn: () => {
+      bgMusic.volume = 0.5; // Restore volume
+      if (bgMusic.paused) {
+        bgMusic.play().catch(e => console.log("Audio play failed:", e));
+      }
+    },
+    onCancel: () => {
+      bgMusic.pause();
+    }
   });
 }
 

@@ -1,4 +1,4 @@
-export function renderLightSwitch(container, onTurnOn) {
+export function renderLightSwitch(container, callbacks) {
   const overlay = document.createElement('div');
   overlay.id = "light-overlay";
   overlay.className = "fixed inset-0 bg-black z-[100] flex flex-col items-center transition-colors duration-[2000ms] ease-in-out";
@@ -66,6 +66,7 @@ export function renderLightSwitch(container, onTurnOn) {
   const handleStart = (e) => {
     if (isLightOn) return;
     isDragging = true;
+    if (callbacks && callbacks.onGrab) callbacks.onGrab();
     startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
     cordLine.style.transition = 'none';
     cordWrapper.classList.remove('animate-swing');
@@ -108,7 +109,7 @@ export function renderLightSwitch(container, onTurnOn) {
       pullText.style.opacity = '0';
       
       // Start music immediately on release
-      onTurnOn();
+      if (callbacks && callbacks.onTurnOn) callbacks.onTurnOn();
       
       // Fade out black overlay
       setTimeout(() => {
@@ -123,6 +124,7 @@ export function renderLightSwitch(container, onTurnOn) {
       
     } else {
       // Didn't pull enough, snap back with a bouncy elasticity
+      if (callbacks && callbacks.onCancel) callbacks.onCancel();
       cordLine.style.transition = 'height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
       cordLine.style.height = `${baseHeight}px`;
       currentY = 0;
