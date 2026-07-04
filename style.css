@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #8b5cf6; /* violet-500 */
-  --color-secondary: #3b82f6; /* blue-500 */
-  --color-bg-start: #1e3a8a; /* Deep distinct blue */
-  --color-bg-end: #6b21a8; /* Deep distinct purple */
+  --color-primary: #d946ef; /* Neon Fuchsia/Purple */
+  --color-secondary: #00e5ff; /* Neon Cyan/Blue */
+  --color-bg-start: #020014; /* Pitch dark midnight blue */
+  --color-bg-end: #4000ff; /* Extremely bright fluorescent purple/blue */
   --font-sans: 'Poppins', sans-serif;
 }
 
 @layer base {
   body {
     @apply flex justify-center items-center min-h-screen m-0 p-0 font-sans text-gray-800;
-    background: linear-gradient(135deg, var(--color-bg-start) 0%, var(--color-bg-end) 100%);
+    background: radial-gradient(circle at 80% 80%, var(--color-bg-end) 0%, var(--color-bg-start) 80%);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     overflow-x: hidden;
@@ -29,7 +29,7 @@
     @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-2xl;
   }
   .text-glow {
-    text-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.8), 0 0 30px rgba(0, 229, 255, 0.4);
   }
 }
 
