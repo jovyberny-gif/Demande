@@ -3,10 +3,19 @@ export function renderSlide(container, slide, currentSlide, totalSlides, onNext,
     ? `<video src="${slide.media}" autoplay loop muted playsinline class="w-full max-w-[280px] md:max-w-md aspect-square object-cover rounded-3xl shadow-[0_15px_30px_rgba(0,0,0,0.2)] md:mr-8 border-4 border-white/50 shrink-0"></video>`
     : `<img src="${slide.media}" alt="Media" class="w-full max-w-[280px] md:max-w-md aspect-square object-cover rounded-3xl shadow-[0_15px_30px_rgba(0,0,0,0.2)] md:mr-8 border-4 border-white/50 shrink-0">`;
 
-  // Progress Bar HTML
-  const progressDots = Array.from({ length: totalSlides }).map((_, i) => `
-    <div class="h-2 rounded-full transition-all duration-500 ${i === currentSlide ? 'w-8 bg-primary' : (i < currentSlide ? 'w-4 bg-primary/50' : 'w-4 bg-gray-200/50')}"></div>
-  `).join('');
+  // Attachment Gauge HTML
+  const progressPercentage = Math.round(((currentSlide + 1) / totalSlides) * 100);
+  const progressBarHtml = `
+    <div class="w-full max-w-sm md:max-w-md mb-6">
+      <div class="flex justify-between text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">
+        <span>Niveau d'attachement</span>
+        <span>${progressPercentage}%</span>
+      </div>
+      <div class="h-3 w-full bg-gray-200/50 rounded-full overflow-hidden shadow-inner border border-white/40">
+        <div class="h-full bg-gradient-to-r from-gray-400 to-gray-800 rounded-full transition-all duration-1000 ease-out" style="width: ${progressPercentage}%"></div>
+      </div>
+    </div>
+  `;
 
   container.innerHTML = `
     <div class="glass-card w-full max-w-5xl rounded-[2.5rem] p-6 md:p-12 pop-in flex flex-col relative overflow-hidden">
@@ -14,9 +23,7 @@ export function renderSlide(container, slide, currentSlide, totalSlides, onNext,
       <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-gray-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-40"></div>
       
       <div class="relative z-10 flex flex-col items-center">
-        <div class="flex gap-2 mb-6">
-          ${progressDots}
-        </div>
+        ${progressBarHtml}
         
         <div class="flex flex-col md:flex-row items-center md:items-stretch justify-center w-full gap-8 md:gap-12 mt-4">
           ${mediaElement}
