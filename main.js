@@ -50,10 +50,27 @@ function renderCurrentSlide() {
 }
 
 function startApp() {
+  preloadAssets();
   renderEnvelope(app, handleOpen);
   // Add the light switch overlay on top of the envelope
   renderLightSwitch(app, () => {
     bgMusic.play().catch(err => console.log("La musique n'a pas pu se lancer automatiquement :", err));
+  });
+}
+
+function preloadAssets() {
+  const images = ['/love.png', '/photo1.jpg', '/photo2.jpg'];
+  const videos = ['/video1.mp4', '/video2.mp4', '/video3.mp4', '/video-success.mp4'];
+  
+  images.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+  
+  videos.forEach(src => {
+    const vid = document.createElement('video');
+    vid.preload = 'auto';
+    vid.src = src;
   });
 }
 

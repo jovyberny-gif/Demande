@@ -31,8 +31,17 @@ export function renderQuestion(container, phrases, onSuccess) {
     const currentPaddingTop = parseFloat(window.getComputedStyle(yesBtn).paddingTop);
     const currentPaddingLeft = parseFloat(window.getComputedStyle(yesBtn).paddingLeft);
     
-    yesBtn.style.fontSize = `${currentSize * 1.2}px`;
-    yesBtn.style.padding = `${currentPaddingTop * 1.2}px ${currentPaddingLeft * 1.2}px`;
+    // Capping sizes to prevent breaking mobile layouts
+    const maxSize = window.innerWidth < 768 ? 40 : 70;
+    const maxPadTop = window.innerWidth < 768 ? 24 : 40;
+    const maxPadLeft = window.innerWidth < 768 ? 48 : 80;
+
+    const newSize = Math.min(currentSize * 1.2, maxSize);
+    const newPadTop = Math.min(currentPaddingTop * 1.2, maxPadTop);
+    const newPadLeft = Math.min(currentPaddingLeft * 1.2, maxPadLeft);
+    
+    yesBtn.style.fontSize = `${newSize}px`;
+    yesBtn.style.padding = `${newPadTop}px ${newPadLeft}px`;
     
     if (noClickCount < phrases.length) {
       noBtn.innerText = phrases[noClickCount];
