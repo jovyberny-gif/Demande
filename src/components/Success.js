@@ -1,4 +1,14 @@
+import confetti from 'canvas-confetti';
+
 export function renderSuccess(onRestart) {
+  // Confetti explosion
+  confetti({
+    particleCount: 200,
+    spread: 120,
+    origin: { y: 0.6 },
+    colors: ['#ffffff', '#d1d5db', '#6b7280', '#111827']
+  });
+
   const mainGif = document.getElementById('main-gif');
   const question = document.getElementById('question');
   const buttonsContainer = document.getElementById('buttons-container');
