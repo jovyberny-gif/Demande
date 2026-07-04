@@ -57,7 +57,7 @@ export function renderLightSwitch(container, onTurnOn) {
     
     // Only allow pulling down, up to max 120px
     currentY = Math.max(0, Math.min(deltaY, 120));
-    cordWrapper.style.transform = \`translateY(\${currentY}px)\`;
+    cordWrapper.style.transform = `translateY(${currentY}px)`;
   };
   
   const handleEnd = () => {
