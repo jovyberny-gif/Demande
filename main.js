@@ -4,6 +4,7 @@ import { renderSlide } from './src/components/Slide.js';
 import { renderQuestion } from './src/components/Question.js';
 import { renderSuccess } from './src/components/Success.js';
 import { initParticles } from './src/components/Particles.js';
+import { renderLightSwitch } from './src/components/LightSwitch.js';
 
 const app = document.getElementById('app');
 let currentSlide = 0;
@@ -51,6 +52,10 @@ function renderCurrentSlide() {
 
 function startApp() {
   renderEnvelope(app, handleOpen);
+  // Add the light switch overlay on top of the envelope
+  renderLightSwitch(app, () => {
+    // This callback runs when the light is fully turned on
+  });
 }
 
 // Start the application
