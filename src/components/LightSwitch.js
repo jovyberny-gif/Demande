@@ -3,6 +3,23 @@ export function renderLightSwitch(container, onTurnOn) {
   overlay.id = "light-overlay";
   overlay.className = "fixed inset-0 bg-black z-[100] flex flex-col items-center transition-colors duration-[2000ms] ease-in-out";
   
+  // Create a style element for the swing animation
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes cord-swing {
+      0% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(0) rotate(10deg); }
+      40% { transform: translateY(0) rotate(-8deg); }
+      60% { transform: translateY(0) rotate(5deg); }
+      80% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    .animate-swing {
+      animation: cord-swing 1.5s ease-in-out forwards;
+    }
+  `;
+  document.head.appendChild(style);
+
   overlay.innerHTML = `
     <!-- The Lamp -->
     <div class="relative flex flex-col items-center w-full mt-0">
@@ -10,19 +27,21 @@ export function renderLightSwitch(container, onTurnOn) {
       <div class="w-1 h-12 bg-gray-800"></div>
       
       <!-- Lamp Shade -->
-      <div class="relative z-10 w-32 h-16 bg-gray-700 rounded-t-full shadow-lg flex flex-col items-center justify-end overflow-hidden" id="lamp-shade">
+      <div class="relative z-10 w-32 h-16 bg-gray-700 rounded-t-full shadow-lg flex flex-col items-center justify-end overflow-hidden border-b-4 border-gray-600" id="lamp-shade">
          <!-- Bulb (hidden at first) -->
-         <div id="bulb" class="w-12 h-4 bg-white rounded-t-full mt-auto opacity-10 transition-opacity duration-[500ms]"></div>
+         <div id="bulb" class="w-12 h-6 bg-white rounded-t-full mt-auto opacity-10 transition-opacity duration-[500ms] shadow-[0_-5px_15px_rgba(255,255,255,0.8)]"></div>
       </div>
       
-      <!-- The cord -->
-      <div id="cord-wrapper" class="relative cursor-grab flex flex-col items-center group mt-[-10px] z-0 touch-none">
-        <div id="cord-line" class="w-1 h-32 bg-gray-600 transition-colors group-hover:bg-gray-500"></div>
-        <div class="w-5 h-8 bg-gray-500 rounded-full -mt-1 shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:bg-gray-400"></div>
+      <!-- The cord wrapper (origin top for swinging) -->
+      <div id="cord-wrapper" class="relative cursor-grab flex flex-col items-center group mt-[-5px] z-0 touch-none origin-top">
+        <!-- Braided cord look -->
+        <div id="cord-line" class="w-[3px] h-36 bg-gradient-to-b from-gray-600 via-gray-400 to-gray-600" style="background-size: 100% 4px;"></div>
+        <!-- Handle (looks like a brass/wooden pull knob) -->
+        <div class="w-5 h-10 bg-gradient-to-br from-amber-600 to-amber-900 rounded-b-xl rounded-t-sm shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-t-2 border-amber-500"></div>
       </div>
       
       <!-- Glow effect (hidden at first) -->
-      <div id="lamp-glow" class="absolute top-[64px] w-[150vw] h-[150vh] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.8)_0%,_rgba(0,0,0,0)_60%)] opacity-0 transition-opacity duration-[1500ms] pointer-events-none z-[-1]"></div>
+      <div id="lamp-glow" class="absolute top-[64px] w-[150vw] h-[150vh] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,230,0.7)_0%,_rgba(0,0,0,0)_60%)] opacity-0 transition-opacity duration-[1500ms] pointer-events-none z-[-1]"></div>
     </div>
     
     <div id="pull-text" class="mt-16 text-gray-400 font-light tracking-[0.3em] uppercase text-sm animate-pulse pointer-events-none transition-opacity duration-500">
@@ -47,16 +66,19 @@ export function renderLightSwitch(container, onTurnOn) {
     isDragging = true;
     startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
     cordWrapper.style.transition = 'none';
+    cordWrapper.classList.remove('animate-swing');
     cordWrapper.classList.replace('cursor-grab', 'cursor-grabbing');
   };
   
   const handleMove = (e) => {
     if (!isDragging) return;
     const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-    const deltaY = clientY - startY;
     
-    // Only allow pulling down, up to max 120px
-    currentY = Math.max(0, Math.min(deltaY, 120));
+    // Add resistance: deltaY is multiplied by 0.5 to feel heavier
+    const deltaY = (clientY - startY) * 0.5; 
+    
+    // Max pull is 80px before it gets too stiff
+    currentY = Math.max(0, Math.min(deltaY, 80));
     cordWrapper.style.transform = `translateY(${currentY}px)`;
   };
   
@@ -64,12 +86,15 @@ export function renderLightSwitch(container, onTurnOn) {
     if (!isDragging) return;
     isDragging = false;
     cordWrapper.classList.replace('cursor-grabbing', 'cursor-grab');
-    cordWrapper.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     
-    if (currentY > 50) {
+    if (currentY > 40) {
       // Pulled enough to click!
       isLightOn = true;
+      
+      // Snap back up and swing!
+      cordWrapper.style.transition = 'none';
       cordWrapper.style.transform = 'translateY(0px)';
+      cordWrapper.classList.add('animate-swing'); // triggers swing animation
       
       // Visual feedback: click!
       bulb.classList.replace('opacity-10', 'opacity-100');
@@ -82,15 +107,17 @@ export function renderLightSwitch(container, onTurnOn) {
       // Fade out black overlay
       setTimeout(() => {
         overlay.classList.replace('bg-black', 'bg-transparent');
-      }, 500); // short wait for the lamp to "light up" the room before fading background
+      }, 500); 
       
       // Remove overlay completely
       setTimeout(() => {
         overlay.remove();
+        style.remove();
       }, 2500);
       
     } else {
-      // Didn't pull enough, snap back
+      // Didn't pull enough, just snap back and swing slightly
+      cordWrapper.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
       cordWrapper.style.transform = 'translateY(0px)';
       currentY = 0;
     }
