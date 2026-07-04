@@ -1,7 +1,7 @@
 export function renderLightSwitch(container, callbacks) {
   const overlay = document.createElement('div');
   overlay.id = "light-overlay";
-  overlay.className = "fixed inset-0 bg-black z-[100] flex flex-col items-center transition-colors duration-[2000ms] ease-in-out";
+  overlay.className = "fixed inset-0 bg-indigo-950 z-[100] flex flex-col items-center transition-colors duration-[2000ms] ease-in-out";
   
   // Create a style element for the swing animation
   const style = document.createElement('style');
@@ -111,9 +111,9 @@ export function renderLightSwitch(container, callbacks) {
       // Start music immediately on release
       if (callbacks && callbacks.onTurnOn) callbacks.onTurnOn();
       
-      // Fade out black overlay
+      // Fade out indigo overlay
       setTimeout(() => {
-        overlay.classList.replace('bg-black', 'bg-transparent');
+        overlay.classList.replace('bg-indigo-950', 'bg-transparent');
       }, 500); 
       
       // Remove overlay completely
