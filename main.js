@@ -13,7 +13,6 @@ bgMusic.loop = true;
 bgMusic.volume = 0.5;
 
 function handleOpen() {
-  bgMusic.play().catch(err => console.log("La musique n'a pas pu se lancer automatiquement :", err));
   renderCurrentSlide();
 }
 
@@ -54,7 +53,7 @@ function startApp() {
   renderEnvelope(app, handleOpen);
   // Add the light switch overlay on top of the envelope
   renderLightSwitch(app, () => {
-    // This callback runs when the light is fully turned on
+    bgMusic.play().catch(err => console.log("La musique n'a pas pu se lancer automatiquement :", err));
   });
 }
 
