@@ -3,6 +3,7 @@ import { renderEnvelope } from './src/components/Envelope.js';
 import { renderSlide } from './src/components/Slide.js';
 import { renderQuestion } from './src/components/Question.js';
 import { renderSuccess } from './src/components/Success.js';
+import { initParticles } from './src/components/Particles.js';
 
 const app = document.getElementById('app');
 let currentSlide = 0;
@@ -54,3 +55,4 @@ function startApp() {
 
 // Start the application
 startApp();
+initParticles();
