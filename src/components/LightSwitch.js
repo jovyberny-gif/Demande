@@ -52,6 +52,7 @@ export function renderLightSwitch(container, onTurnOn) {
   container.appendChild(overlay);
 
   const cordWrapper = overlay.querySelector('#cord-wrapper');
+  const cordLine = overlay.querySelector('#cord-line');
   const bulb = overlay.querySelector('#bulb');
   const lampGlow = overlay.querySelector('#lamp-glow');
   const pullText = overlay.querySelector('#pull-text');
@@ -60,12 +61,13 @@ export function renderLightSwitch(container, onTurnOn) {
   let isDragging = false;
   let startY = 0;
   let currentY = 0;
+  const baseHeight = 144; // h-36 in tailwind is 144px
   
   const handleStart = (e) => {
     if (isLightOn) return;
     isDragging = true;
     startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-    cordWrapper.style.transition = 'none';
+    cordLine.style.transition = 'none';
     cordWrapper.classList.remove('animate-swing');
     cordWrapper.classList.replace('cursor-grab', 'cursor-grabbing');
   };
@@ -74,12 +76,14 @@ export function renderLightSwitch(container, onTurnOn) {
     if (!isDragging) return;
     const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
     
-    // Add resistance: deltaY is multiplied by 0.5 to feel heavier
-    const deltaY = (clientY - startY) * 0.5; 
+    // Add resistance and stretch factor
+    const deltaY = (clientY - startY) * 0.7; 
     
-    // Max pull is 80px before it gets too stiff
-    currentY = Math.max(0, Math.min(deltaY, 80));
-    cordWrapper.style.transform = `translateY(${currentY}px)`;
+    // Max stretch is 100px before it gets too stiff
+    currentY = Math.max(0, Math.min(deltaY, 100));
+    
+    // Instead of translating the whole wrapper, we stretch the cord height
+    cordLine.style.height = `${baseHeight + currentY}px`;
   };
   
   const handleEnd = () => {
@@ -91,10 +95,12 @@ export function renderLightSwitch(container, onTurnOn) {
       // Pulled enough to click!
       isLightOn = true;
       
-      // Snap back up and swing!
-      cordWrapper.style.transition = 'none';
-      cordWrapper.style.transform = 'translateY(0px)';
-      cordWrapper.classList.add('animate-swing'); // triggers swing animation
+      // Snap the cord back to original length immediately
+      cordLine.style.transition = 'height 0.1s ease-out';
+      cordLine.style.height = `${baseHeight}px`;
+      
+      // Swing!
+      cordWrapper.classList.add('animate-swing');
       
       // Visual feedback: click!
       bulb.classList.replace('opacity-10', 'opacity-100');
@@ -116,9 +122,9 @@ export function renderLightSwitch(container, onTurnOn) {
       }, 2500);
       
     } else {
-      // Didn't pull enough, just snap back and swing slightly
-      cordWrapper.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-      cordWrapper.style.transform = 'translateY(0px)';
+      // Didn't pull enough, snap back with a bouncy elasticity
+      cordLine.style.transition = 'height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      cordLine.style.height = `${baseHeight}px`;
       currentY = 0;
     }
   };
