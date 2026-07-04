@@ -3,7 +3,7 @@ export function renderQuestion(container, phrases, onSuccess) {
     <div class="glass-card w-full max-w-3xl rounded-[3rem] p-8 md:p-16 pop-in flex flex-col items-center relative overflow-hidden text-center">
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/50 to-transparent"></div>
       
-      <img src="/love.png" alt="Love Kanji" class="w-48 h-48 md:w-64 md:h-64 object-cover rounded-full mb-10 shadow-2xl relative z-10 border-4 border-white bg-white" id="main-gif">
+      <img src="/love.png" alt="Love Kanji" class="w-48 h-48 md:w-64 md:h-64 object-contain mb-10 drop-shadow-2xl relative z-10" id="main-gif">
       
       <h1 id="question" class="text-3xl md:text-4xl text-gray-800 mb-12 leading-relaxed font-bold relative z-10 text-glow">
         Alors, veux-tu être ma copine ? 🥰
