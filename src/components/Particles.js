@@ -7,7 +7,7 @@ export function initParticles() {
     particle.style.width = `${size}px`;
     particle.style.height = `${size}px`;
     
-    const colors = ['bg-white', 'bg-gray-200', 'bg-gray-300'];
+    const colors = ['bg-white', 'bg-purple-300', 'bg-blue-300', 'bg-indigo-400'];
     particle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
     
     particle.style.left = `${x - size/2}px`;

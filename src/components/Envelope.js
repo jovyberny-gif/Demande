@@ -2,7 +2,7 @@ export function renderEnvelope(container, onOpen) {
   container.innerHTML = `
     <div class="flex flex-col items-center justify-center w-full max-w-3xl pop-in p-8 text-center min-h-[80vh]">
       <div class="relative group cursor-pointer" id="envelope-icon">
-        <div class="absolute inset-0 bg-gray-400 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+        <div class="absolute inset-0 bg-purple-500 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         <div class="text-[10rem] md:text-[14rem] drop-shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:-translate-y-4 mb-12 relative z-10 animate-[bounce_3s_infinite]">
           💌
         </div>
